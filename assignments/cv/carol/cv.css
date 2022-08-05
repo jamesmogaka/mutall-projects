@@ -1,0 +1,87 @@
+
+    body {
+        margin: 0px;
+        padding: 0px;
+        font-size: 18px;  
+        background-color: beige;
+        overflow-y: hidden;
+    }
+    
+    .header {
+        display: flex;
+        position: sticky;
+    }
+    img {
+        width: 120px;
+        height: 120px;
+        margin-top: 2px;
+        margin-left: 10px;
+        border-radius: 15%;
+    }
+    .information {
+        display: flex;
+        margin: 1px;
+        padding: 2px;
+    }
+    .cv{
+        margin-left: 60px;
+        margin-top: 40px;
+    }
+    
+    .atag{
+        display: block;
+    }
+    
+    #navi {
+        background-color: antiquewhite;
+        padding-left: 4%;
+        line-height: 1.5;
+        display: block;
+    }
+    #content {
+        flex: 80%;
+        background-color: aliceblue;
+        overflow-y: scroll;
+        height: 86vh;
+        margin: 1px;
+        padding-left: 4%;
+    }
+    .about{
+        display: block;
+        width: 25%;
+    }
+
+    .ration{
+        text-decoration: underline;
+        margin-right: 20px;
+    }
+    table {
+        font-size: 20px;
+    }
+    tr:nth-child(even) {
+        background-color: gainsboro;
+    }
+    
+   .lines{
+        display: block;
+        width: 20%;
+    }
+    @media screen and(max-width: 600px) {
+       
+       .header {
+            display: flex;
+            flex-direction:column;
+        }
+        #content {
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+        /* Hide the panel when viewing in mobile view */
+        navi{
+            display:none;
+        }
+        nav{
+            display: none;
+        }
+
+    }

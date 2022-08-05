@@ -1,0 +1,80 @@
+body{
+    font-family: times serifs;
+    margin:0px;
+    padding:0px;
+    font-size:18px;
+    background-color:#e6f0ff;
+    overflow:hidden;
+}
+header{
+    display:flex;
+    align-items:center;
+    position: sticky;
+}
+img{
+    height:100px;
+    margin-left: 10px;
+    margin-right :50px;
+    border-radius: 20%;
+}
+#personal_info{
+    display:block;
+    margin-right :50px;
+    
+}
+
+h2{
+    text-decoration: bold;
+}
+
+nav{
+    grid-area:navbar;
+    line-height:200%;
+    
+}
+ul{
+    margin:0;
+    margin-left:10px;
+    padding:0;
+}
+a{
+    text-decoration: none;
+    font-size:small;
+}
+li:nth-child(odd){
+    background-color:#cacccf;
+}
+li:nth-child(even){
+    background-color:white;
+}
+main{
+    grid-area:main;
+    background-color: white;
+    padding: 20px;
+    line-height: 1.6;
+    height:75vh;
+    overflow-y: scroll;
+}
+.content{
+    display:grid;
+    grid-template-areas: 
+    'navbar main main main main main main' 
+    'navbar main main main main main main'
+    'navbar main main main main main main'
+    'navbar main main main main main main'
+    'navbar main main main main main main';
+    gap: 20px;
+    padding: 10px;
+}
+h3{
+    margin:0;
+}
+.second_mail{
+    margin-left: 50px;
+}
+table{
+    width: 100%;
+}
+td{
+    border: 2px solid black;
+}
