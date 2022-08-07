@@ -17,13 +17,13 @@ open class MainActivity : AppCompatActivity() {
     private val sendSmsCode: Int = 1
     private val retrieveSmsCode: Int = 2
 
-    //Getting the accountInputField by its id and retrieving its text attribute
-    private val accountInputField: EditText = findViewById(R.id.accountInputField)
-    private val accountNumber = accountInputField.text.toString()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        //Check for permissions
+        checkPermission(Manifest.permission.SEND_SMS,sendSmsCode)
+        checkPermission(Manifest.permission.READ_SMS,retrieveSmsCode)
 
         //Initialising variables and assigning ui buttons by linking them to their ids
         val send = findViewById<Button>(R.id.send)
@@ -32,26 +32,27 @@ open class MainActivity : AppCompatActivity() {
         //Setting onclick listener for various functionality
         //Sending sms to kplc
         send.setOnClickListener {
-            checkPermission(Manifest.permission.SEND_SMS,sendSmsCode)
+            //Getting the accountInputField by its id and retrieving its text attribute
+            val accountInputField: EditText = findViewById(R.id.accountInputField)
+            val accountNumber = accountInputField.text.toString()
+            sendSms(accountNumber)
+
+            //Clear the accountInputField
+            accountInputField.setText("")
         }
 
         //Reading the response from inbox
         retrieve.setOnClickListener {
-            checkPermission(Manifest.permission.READ_SMS,retrieveSmsCode)
+            retrieveSms()
         }
     }
     protected  fun checkPermission(permission: String,requestCode: Int){
         //Checking for permission and requesting if not granted
         //
-        if (ContextCompat.checkSelfPermission(this@MainActivity,permission)!= PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this@MainActivity, arrayOf(permission), requestCode)
+        if (
+            ContextCompat.checkSelfPermission(this@MainActivity,permission)!= PackageManager.PERMISSION_GRANTED){
+                ActivityCompat.requestPermissions(this@MainActivity, arrayOf(permission), requestCode)
 
-        }else {
-            //Checking which permission is requested to invoke relevant function
-            when(permission){
-                Manifest.permission.SEND_SMS -> sendSms(accountNumber)
-                Manifest.permission.READ_SMS -> retrieveSms()
-            }
         }
     }
 
@@ -88,22 +89,30 @@ open class MainActivity : AppCompatActivity() {
         try {
             // Send the message and display an alert to inform that the message is sent
             manager.sendTextMessage("97771",null,accountNumber,null,null)
-            //Clear the accountInputField
-            accountInputField.setText("")
             Toast.makeText(this@MainActivity, "Message sent", Toast.LENGTH_SHORT).show()
         }catch (e:Exception){
+
             //Display exception message in a toast
-            Toast.makeText(this@MainActivity, "Please fill the account number", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@MainActivity, "$e :Please fill the account number", Toast.LENGTH_SHORT).show()
         }
     }
     //Sends multiple sms by iteration over an array containing the message body
     protected fun sendMultipleSms(){
-        //declare the array of messages <String>
+        //declare the array of accountNumbers <String>
         val accountNumbers = ArrayList<String>()
+
         //Iterate over the array and with each iteration call the sendSms function
+        //Use either for or forEach to iterate over array
+        //
         for(accountNumber in accountNumbers){
+            //call the sendSms function with each iteration
             sendSms(accountNumber)
         }
+    }
+
+    // functionality to delete historical records from the inbox
+    protected fun clearInbox(){
+        contentResolver.delete(Telephony.Sms.Inbox.CONTENT_URI,"address = 97771",null)
     }
 
     // Check the result of the requestPermission operation above
@@ -114,19 +123,12 @@ open class MainActivity : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (grantResults.isNotEmpty() && (grantResults[0] == PackageManager.PERMISSION_GRANTED)){
-            //Checking the request code to invoke relevant functionality
-            when(requestCode){
-                sendSmsCode -> {
-                    Toast.makeText(this@MainActivity, "Sms Permission granted", Toast.LENGTH_SHORT).show()
-                    sendSms(accountNumber)
-                }
-                retrieveSmsCode -> {
-                    Toast.makeText(this@MainActivity, "Inbox permission Granted", Toast.LENGTH_SHORT).show()
-                    retrieveSms()
-                }
-            }
+            //Do nothing if the permission is granted
+
         }else{
+            //If permission is not granted show a toast and close the application
             Toast.makeText(this@MainActivity, "Permission denied", Toast.LENGTH_SHORT).show()
+            //close the application
         }
 
     }
