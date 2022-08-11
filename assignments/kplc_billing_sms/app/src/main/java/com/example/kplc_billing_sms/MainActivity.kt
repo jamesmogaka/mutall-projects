@@ -22,6 +22,7 @@ open class MainActivity : AppCompatActivity() {
     // Initialise  variables useful although the class
     private val sendSmsCode: Int = 1
     private val retrieveSmsCode: Int = 2
+
     //
     //Entry point to the app
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +32,7 @@ open class MainActivity : AppCompatActivity() {
         //Check for permissions
         checkPermission(Manifest.permission.SEND_SMS,sendSmsCode)
         checkPermission(Manifest.permission.READ_SMS,retrieveSmsCode)
+        checkPermission(Manifest.permission.RECEIVE_SMS,3)
 
         //Initialise variables and assigning ui buttons by linking them to their ids
         val send = findViewById<Button>(R.id.send)
@@ -132,13 +134,21 @@ open class MainActivity : AppCompatActivity() {
                 null,
                 null
             )
-            Toast.makeText(this@MainActivity, "Message sent", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this@MainActivity,
+                "Message sent",
+                Toast.LENGTH_SHORT
+            ).show()
         }catch (e:Exception){
             
             //investigate on exception type???????
 
             //Display exception message in a toast
-            Toast.makeText(this@MainActivity, "$e :Please fill the account number", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this@MainActivity,
+                "$e :Please fill the account number",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
     //Sends multiple sms by iteration over an array containing the message body
@@ -193,11 +203,15 @@ open class MainActivity : AppCompatActivity() {
             //
             //Do nothing if the permission is granted
 
-            //Store the results in a global varriable(grantResults)?????
+            //Store the results in a global variable(grantResults)?????
 
         }else{
             //If permission is not granted show a toast and close the application
-            Toast.makeText(this@MainActivity, "Permission denied", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this@MainActivity,
+                "Permission denied",
+                Toast.LENGTH_SHORT // Duration of toast
+            ).show()
 
             //Terminate the current activity
             this.finish()
