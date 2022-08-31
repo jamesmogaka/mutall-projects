@@ -1,18 +1,17 @@
 //a statement
 // statements should be terminated by a ;
-//coment are indicated by (//)
-// console.log is uesd to print out to the console (stdout)
+//comment are indicated by (//)
+// console.log is used to print out to the console (stdout)
 console.log("Hello World");
 
-// varriables are declared by let keyword
-//By default varriables are undefined
-//var was the keyword that was used initially to declare varriables(has flaws)
-let name = "james";
-console.log(name);
+// variables are declared by let keyword
+//By default variables are undefined
+//var was the keyword that was used initially to declare variables(has flaws)
+let names = "james";
+console.log(names);
 
-//constants are varriables which are immutable once assigned
+//constants are variables which are immutable once assigned
 //They are declared by the const keyword
-
 const pi = 3.142;
 console.log(pi);
 // pi = 3.143; Reassignment of constants bring about an error
@@ -26,11 +25,11 @@ const firstName = 'jane' // in js single quotes are used mostly
 //boolean
 const isTrue = true; //can only be true or false
 //undefined 
-const age = undefined; // if varriables are not assigned they are by default undefined
+const age = undefined; // if variables are not assigned they are by default undefined
 //null
-const gender = null; // used when explicitly clearing the value of a varriable
+const gender = null; // used when explicitly clearing the value of a variable
 
-//typeof is a function that is useful in cheecking of the type of a varriable
+//typeof is a function that is useful in checking of the type of a variable
 console.log(typeof length)
 console.log(typeof firstName)
 console.log(typeof isTrue)
@@ -39,7 +38,7 @@ console.log(typeof gender)
 
 //Reference types (object,arrays,functions)
 //objects
-//they help when working with multiple related varriables 
+//they help when working with multiple related variables 
 //Maps or dictionaries in python
 //they are declared using the object literal ({})
 
@@ -48,7 +47,7 @@ let person = {
     name:'james',
     age: 22
 };
-console.log(typeof person) //retuens type of person
+console.log(typeof person) //returns type of person
 
 //there are two methods of accessing object properties 
 // dot notation(.)

@@ -20,28 +20,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/retrieve"
-        android:layout_width="131dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="20dp"
-        android:gravity="center"
-        android:text="@string/retrieve_mess"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/btnClear"
-        app:layout_constraintTop_toBottomOf="@+id/accountInputField" />
-
-    <ListView
-        android:id="@+id/contentBox"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnSendMultiple" />
-
-    <Button
         android:id="@+id/send"
         android:layout_width="wrap_content"
         android:layout_height="59dp"
@@ -63,6 +41,18 @@
         app:layout_constraintTop_toBottomOf="@+id/accountInputField" />
 
     <Button
+        android:id="@+id/retrieve"
+        android:layout_width="131dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="20dp"
+        android:gravity="center"
+        android:text="@string/retrieve_mess"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/btnClear"
+        app:layout_constraintTop_toBottomOf="@+id/accountInputField" />
+
+    <Button
         android:id="@+id/btnClear"
         android:layout_width="91dp"
         android:layout_height="50dp"
@@ -71,4 +61,24 @@
         android:text="clear"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/accountInputField" />
+
+    <Button
+        android:id="@+id/btnRetreiveAccountNos"
+        android:layout_width="186dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="8dp"
+        android:text="GetAccount Nmbers &amp; Send"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/retrieve" />
+
+    <ListView
+        android:id="@+id/contentBox"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnRetreiveAccountNos" />
 </androidx.constraintlayout.widget.ConstraintLayout>

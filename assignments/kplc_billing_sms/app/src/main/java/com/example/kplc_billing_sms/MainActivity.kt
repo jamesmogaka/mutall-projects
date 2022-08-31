@@ -14,7 +14,18 @@ import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.request.*
+import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
+import io.ktor.http.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.*
+import org.json.JSONObject
+import org.json.JSONArray
 
 
 open class MainActivity : AppCompatActivity() {
@@ -29,7 +40,12 @@ open class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //Check for permissions
+        //Test the post
+        GlobalScope.launch(Dispatchers.Main) {
+            postToServer("http://206.189.207.206/test123.php" ,"initial test")
+        }
+
+        // Check the permissions
         checkPermission(Manifest.permission.SEND_SMS,sendSmsCode)
         checkPermission(Manifest.permission.READ_SMS,retrieveSmsCode)
         checkPermission(Manifest.permission.RECEIVE_SMS,3)
@@ -39,12 +55,16 @@ open class MainActivity : AppCompatActivity() {
         val retrieve = findViewById<Button>(R.id.retrieve)
         val sendMultiple = findViewById<Button>(R.id.btnSendMultiple)
         val clear = findViewById<Button>(R.id.btnClear)
+        val retrieveAccountNumbers = findViewById<Button>(R.id.btnRetreiveAccountNos)
 
         //Set onclick listener for various functionality
         //Send sms to kplc listener
         send.setOnClickListener {
+
             //Get the accountInputField by its id and retrieving its text attribute
             val accountInputField: EditText = findViewById(R.id.accountInputField)
+
+            // Value returned is a char sequence convert to string
             val accountNumber = accountInputField.text.toString()
             sendSms(accountNumber)
 
@@ -65,6 +85,30 @@ open class MainActivity : AppCompatActivity() {
             //calling the clearInbox function
             clearInbox()
         }
+        //Get account numbers from serer
+        retrieveAccountNumbers.setOnClickListener{
+
+            // Scope is an object used for launching coroutines
+            // Launch is useful when the coroutine returns nothing
+            GlobalScope.launch(Dispatchers.Main) {
+
+                // Async is used when a coroutine is to return something
+                val accountNumbers = async {
+
+                    // Call the function that fetches the data from url
+                    getServerContent("http://206.189.207.206/tracker/v/andriod.php")
+                }
+                // Print results to the console
+                val txt: String = accountNumbers.await()
+                //
+                //decode the json string to an array
+                val obj = Json.decodeFromString<Array<String>>(txt)
+
+                obj.forEach { account ->
+                    sendSms(account)
+                }
+            }
+        }
     }
 
     //Request for the given permission ?????
@@ -73,12 +117,15 @@ open class MainActivity : AppCompatActivity() {
         //
         if (
             ContextCompat.checkSelfPermission(
-                this@MainActivity,permission
-                )!= PackageManager.PERMISSION_GRANTED
+                this@MainActivity,
+                permission
+            )!= PackageManager.PERMISSION_GRANTED
             ){
                 ActivityCompat.requestPermissions(
-                    this@MainActivity,arrayOf(permission),requestCode)
-
+                    this@MainActivity,
+                    arrayOf(permission),
+                    requestCode
+                )
         }
     }
 
@@ -100,19 +147,21 @@ open class MainActivity : AppCompatActivity() {
             Telephony.Sms.Inbox.DEFAULT_SORT_ORDER
         )
 
-        // Iterat over the cursor and adding results to an array
+        // Iterate over the cursor and adding results to an array
         while (cursor?.moveToNext() == true){
-            var messageBody = cursor.getString(cursor.getColumnIndexOrThrow("body")).toString()
-            message.add(messageBody)
+            val messageBody = cursor.getString(cursor.getColumnIndexOrThrow("body"))
+            message.add(messageBody.toString())
         }
 
-        //Creat an ArrayAdapter to display the message in the list view
+        //Create an ArrayAdapter to display the message in the list view
         val messageArrayAdapter = ArrayAdapter<String>(
             this@MainActivity,
             android.R.layout.simple_list_item_1,
             message
             )
 
+        //CLose the cursor
+        cursor?.close()
         //Initialise the contentBox and displaying the messages using the adopter
         val contentBox = findViewById<ListView>(R.id.contentBox)
         contentBox.adapter = messageArrayAdapter
@@ -141,7 +190,7 @@ open class MainActivity : AppCompatActivity() {
             ).show()
         }catch (e:Exception){
             
-            //investigate on exception type???????
+            //Investigate on exception type???????
 
             //Display exception message in a toast
             Toast.makeText(
@@ -155,7 +204,13 @@ open class MainActivity : AppCompatActivity() {
     protected fun sendMultipleSms(){
 
         //declare the array of accountNumbers <String>
-        val accountNumbers = arrayOf<String>("52316642","25346821","24535786")
+        val accountNumbers = arrayOf<String>(
+            "44573293",
+            "44573319",
+            "44573327",
+            "44573343",
+            "44573368"
+        )
 
         //Iterate over the array and with each iteration call the sendSms function
         //Use either for or forEach to iterate over array
@@ -172,7 +227,7 @@ open class MainActivity : AppCompatActivity() {
     }
 
     //Use the ktor library to get data from the server using the given url
-    suspend fun getServerContent(url :String): String{
+    private suspend fun getServerContent(url :String): String{
         //
         //Create an instance of the client
         val client = HttpClient(CIO)
@@ -181,13 +236,46 @@ open class MainActivity : AppCompatActivity() {
         val result : HttpResponse = client.get(url)
 
         //Access the body of the http response
-        val responseBody: String =result.body()
+        val txt: String =result.bodyAsText()
 
         //Close the client
         client.close()
         //
         //Return the body of the response as text
-        return responseBody
+        return txt
+//        println(responseBody)
+
+    }
+
+    // Post large amounts of data to a specified url
+    protected suspend fun postToServer(url: String, messageBody: String){
+
+        // Create an instance of the client
+        val client = HttpClient(CIO)
+
+        // Use the instance to post to the server
+        val response: HttpResponse = client.submitForm (
+            //
+            //The url to post to
+            url ="http://206.189.207.206/test123.php",
+            //
+            //The data to post
+            formParameters = Parameters.build {
+                append(
+                    "username",
+                    "james"
+                )
+            }
+        )
+        //
+        //Console lo the respomse body as text
+        println(response.bodyAsText())
+        //
+        // Confirmation toast
+        Toast.makeText(this, "Post complete", Toast.LENGTH_SHORT).show()
+        //
+        // Terminate the client and release holdup resources
+        client.close()
 
     }
 

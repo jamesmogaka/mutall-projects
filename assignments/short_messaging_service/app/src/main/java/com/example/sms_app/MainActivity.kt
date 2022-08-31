@@ -19,13 +19,20 @@ class MainActivity : AppCompatActivity() {
         send.setOnClickListener {
             //check the permission
             //if granted continue to sent message
-            if (ContextCompat.checkSelfPermission(this@MainActivity,Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED){
+            if (ContextCompat.checkSelfPermission(
+                    this@MainActivity,
+                    Manifest.permission.SEND_SMS
+            ) == PackageManager.PERMISSION_GRANTED){
                 sendMessage()
             }else{
                 // requesting the permission from the user
-                // Manifest.permission.SEND_SMS is a dangerous permission since it has access to the users data(runtime permission)
 
-                ActivityCompat.requestPermissions(this@MainActivity, arrayOf(Manifest.permission.SEND_SMS),1)
+
+                ActivityCompat.requestPermissions(
+                    this@MainActivity,
+                    arrayOf(Manifest.permission.SEND_SMS),
+                    1
+                )
             }
 
         }
@@ -63,7 +70,11 @@ class MainActivity : AppCompatActivity() {
             sendMessage()
             Toast.makeText(this@MainActivity, "Message sent", Toast.LENGTH_SHORT).show()
         }else{
-            Toast.makeText(this@MainActivity, "Permission denied", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this@MainActivity,
+                "Permission denied",
+                Toast.LENGTH_SHORT
+            ).show()
         }
    }
 }

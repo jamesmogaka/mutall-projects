@@ -19,10 +19,17 @@ class MainActivity : AppCompatActivity() {
         //initial checking to see if the permissions are granted
         //
         retrieve.setOnClickListener {
-            if(ContextCompat.checkSelfPermission(this@MainActivity,Manifest.permission.READ_SMS)!= PackageManager.PERMISSION_GRANTED){
+            if(ContextCompat.checkSelfPermission(
+                    this@MainActivity,
+                    Manifest.permission.READ_SMS
+                )!= PackageManager.PERMISSION_GRANTED){
                 //requesting of permissions from the user
                 //
-                ActivityCompat.requestPermissions(this@MainActivity, arrayOf(Manifest.permission.READ_SMS),1)
+                ActivityCompat.requestPermissions(
+                    this@MainActivity,
+                    arrayOf(Manifest.permission.READ_SMS),
+                    1
+                )
             }else{
                 readSms()
             }
@@ -44,7 +51,10 @@ class MainActivity : AppCompatActivity() {
         //content providers make it easy and secure for applications to exchange data(Telephony.Sms.inbox)
         //create an instance of a content resolver class (it is already a predefined variable)
         //a content resolver is useful in querying a content provider(Telephony.Sms.inbox)
-        val projection = arrayOf(Telephony.TextBasedSmsColumns.ADDRESS,Telephony.TextBasedSmsColumns.BODY) //columns i need
+        val projection = arrayOf(
+            Telephony.TextBasedSmsColumns.ADDRESS,
+            Telephony.TextBasedSmsColumns.BODY
+        ) //columns i need
         val whereClause: String ="address = ?" // condition to be satisfied
         val cursor = contentResolver.query(Telephony.Sms.Inbox.CONTENT_URI,projection,whereClause,
             arrayOf(phoneNo),Telephony.Sms.Inbox.DEFAULT_SORT_ORDER)!!
@@ -62,7 +72,11 @@ class MainActivity : AppCompatActivity() {
         //displaying the content of the messages array to our Textview
         //creating an array adaptor view
 
-        val messageAdaptorView = ArrayAdapter<String>(this@MainActivity,android.R.layout.simple_list_item_1,messages)
+        val messageAdaptorView = ArrayAdapter<String>(
+            this@MainActivity,
+            android.R.layout.simple_list_item_1,
+            messages
+        )
         // binding the adapter view to its layout
         //
         contentBox.adapter = messageAdaptorView
